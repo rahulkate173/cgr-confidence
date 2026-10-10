@@ -521,7 +521,7 @@ def answer_correct(answer: str, ground_truth: str) -> bool:
 
 def main(config: ExperimentalConfig):
     # dataset = datasets.load_dataset("parquet", data_files=config.dataset_path,download_mode="force_redownload")
-    dataset = datasets.load_from_disk(config.dataset_path) 
+    dataset = datasets.load_dataset("parquet", data_files=config.dataset_path)
     model = LLMConfidenceEstimator(config.model_name)
 
     output_dir = "confidence_and_cot_results"
