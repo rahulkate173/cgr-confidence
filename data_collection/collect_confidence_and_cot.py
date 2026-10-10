@@ -534,11 +534,11 @@ def main(config: ExperimentalConfig):
         existing_df = pd.read_parquet(output_path)
 
     processed_ids = set(existing_df["question_id"].tolist()) if not existing_df.empty and "question_id" in existing_df.columns else set()
-
+    split_key = "test" if "test" in dataset else "train"
     batch_size = config.batch_size
     to_process = []
-    for row_idx in range(len(dataset["train"])):
-        row = dataset["train"][row_idx]
+    for row_idx in range(len(dataset[split_key])):
+        row = dataset[split_key][row_idx]
         qid = row.get("id", row_idx)
         if qid not in processed_ids:
             to_process.append((row_idx, config.dataset_prefix + row["question"]))
@@ -598,7 +598,7 @@ def main(config: ExperimentalConfig):
             avg_timings['cot'] = (time.time() - t0) / len(batch_questions)
 
         for i, row_idx in enumerate(batch_indices):
-            row = dataset['train'][row_idx]
+            row = dataset[split_key][row_idx]
             gt = row.get('answer', None)
 
             direct_answer_correct_p_true = answer_correct(ans_pt[i], gt)
